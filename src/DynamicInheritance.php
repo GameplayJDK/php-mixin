@@ -26,12 +26,74 @@
 
 namespace Mixin;
 
+use Exception;
+
 /**
  * Class DynamicInheritance
  *
  * @package Mixin
- * @todo Implement trait.
  */
 trait DynamicInheritance
 {
+    /**
+     * @var array|object[]
+     */
+    private $mixin = [];
+
+    /**
+     * @param object $object
+     */
+    public function addMixin(object $object): void
+    {
+        $this->mixin[] = $object;
+    }
+
+    /**
+     * @param string $method
+     * @param array $argumentArray
+     * @return mixed
+     * @throws Exception
+     */
+    public function __call(string $method, array $argumentArray)
+    {
+        foreach ($this->mixin as $mixin) {
+            if (method_exists($mixin, $method)) {
+                return $mixin->$method(...$argumentArray);
+            }
+        }
+
+        throw new Exception(__CLASS__ . " has no method " . $method);
+    }
+
+    /**
+     * @param string $property
+     * @return mixed
+     * @throws Exception
+     */
+    public function __get(string $property)
+    {
+        foreach ($this->mixin as $mixin) {
+            if (property_exists($mixin, $property)) {
+                return $mixin->$property;
+            }
+        }
+
+        throw new Exception(__CLASS__ . " has no property '{$property}'.");
+    }
+
+    /**
+     * @param string $property
+     * @param mixed $value
+     * @throws Exception
+     */
+    public function __set(string $property, $value)
+    {
+        foreach ($this->mixin as $mixin) {
+            if (property_exists($mixin, $property)) {
+                return $mixin->$property = $value;
+            }
+        }
+
+        throw new Exception(__CLASS__ . " has no property '{$property}'.");
+    }
 }

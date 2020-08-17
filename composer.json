@@ -1,0 +1,21 @@
+{
+  "name": "gameplayjdk/php-mixin",
+  "description": "A library to enable dynamic horizontal inheritance when needed.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Marcel",
+      "email": "github@gameplayjdk.de"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=7.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mixin\\": "src/"
+    }
+  }
+}
